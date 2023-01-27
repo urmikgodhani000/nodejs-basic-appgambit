@@ -1,8 +1,13 @@
 const express = require("express");
 const dotenv = require("dotenv");
 dotenv.config({ path: "./config/config.env" });
+
 const logger = require("./middleware/logger");
 const app = express();
+
+//connect to the database
+const connectDB = require("./config/db");
+connectDB();
 
 //Route files
 const bootcamps = require("./routes/bootcamps");
