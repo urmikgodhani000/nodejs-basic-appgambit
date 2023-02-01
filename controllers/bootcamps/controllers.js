@@ -1,5 +1,5 @@
 const Bootcamp = require("../../models/Bootcamps");
-//const errorHandler = require("../../middleware/error");
+const errorHandler = require("../../middleware/error");
 const asyncHandler = require("../../middleware/async");
 
 exports.craeteBootcamps = async (req, res, next) => {

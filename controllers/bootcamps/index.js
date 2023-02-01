@@ -8,10 +8,12 @@ const {
 } = require("./controllers");
 const router = express.Router();
 
-router.post("/", craeteBootcamps);
-router.get("/:id", getBootcamps);
-router.delete("/:id", deleteBootcamps);
-router.patch("/:id", updateBootcamps);
+router.route("/").post(craeteBootcamps);
+router
+  .route("/:id")
+  .delete(deleteBootcamps)
+  .get(getBootcamps)
+  .patch(updateBootcamps);
 router.post("/get/getPage", pagination);
 
 module.exports = router;
