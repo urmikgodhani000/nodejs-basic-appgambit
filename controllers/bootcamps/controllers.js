@@ -30,12 +30,13 @@ exports.getBootcamps = async (req, res, next) => {
 
 exports.deleteBootcamps = asyncHandler(async (req, res) => {
   try {
-    const bootcamps = await Bootcamp.findByIdAndRemove(req.params.id);
+    const bootcamps = await Bootcamp.findById(req.params.id);
 
     if (!bootcamps) {
       return res.status(400).json({ success: false });
     }
 
+    bootcamps.remove();
     res.status(200).json({ success: true, data: {} });
   } catch (error) {
     next(error);
