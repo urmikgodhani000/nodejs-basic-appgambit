@@ -1,22 +1,25 @@
 const express = require("express");
 const dotenv = require("dotenv");
+const app = express();
+const connectDB = require("./config/db");
+const errorHandler = require("./middleware/error");
+
+app.use(express.json());
+
+//load env
 dotenv.config({ path: "./config/config.env" });
 
-const logger = require("./middleware/logger");
-const app = express();
-
 //connect to the database
-const connectDB = require("./config/db");
 connectDB();
 
 //Route files
-const bootcamps = require("./routes/bootcamps");
-
-//middleware
-app.use(logger);
+const routes = require("./routes");
 
 //Mount routers
-app.use("/bootcamps", bootcamps);
+app.use("", routes);
+
+//Error Handling
+app.use(errorHandler);
 
 const PORT = process.env.PORT;
 app.listen(PORT, console.log(`Server running in ${process.env.PORT}`));
