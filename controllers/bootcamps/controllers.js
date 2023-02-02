@@ -1,6 +1,5 @@
 const Bootcamp = require("../../models/Bootcamps");
 const errorHandler = require("../../middleware/error");
-const asyncHandler = require("../../middleware/async");
 
 exports.craeteBootcamps = async (req, res, next) => {
   try {
@@ -28,7 +27,7 @@ exports.getBootcamps = async (req, res, next) => {
   }
 };
 
-exports.deleteBootcamps = asyncHandler(async (req, res) => {
+exports.deleteBootcamps = async (req, res) => {
   try {
     const bootcamps = await Bootcamp.findById(req.params.id);
 
@@ -41,9 +40,9 @@ exports.deleteBootcamps = asyncHandler(async (req, res) => {
   } catch (error) {
     next(error);
   }
-});
+};
 
-exports.updateBootcamps = asyncHandler(async (req, res) => {
+exports.updateBootcamps = async (req, res) => {
   try {
     const bootcamps = await Bootcamp.findByIdAndUpdate(
       req.params.id,
@@ -62,7 +61,7 @@ exports.updateBootcamps = asyncHandler(async (req, res) => {
   } catch (error) {
     next(error);
   }
-});
+};
 
 exports.pagination = async (req, res) => {
   try {

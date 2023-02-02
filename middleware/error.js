@@ -3,7 +3,7 @@ const errorResponse = require("../utils/errorResponse");
 const errorHandler = (err, req, res, next) => {
   let error = { ...err };
   error.message = err.message;
-  console.log(err);
+  //console.log(err);
 
   //Mongoose bad ObjectId
   if (err.name === "CastError") {
@@ -18,10 +18,11 @@ const errorHandler = (err, req, res, next) => {
   }
 
   //Mongoose required error
-  if (err._message === "Bootcamp validation failed") {
-    const msg = error.message;
-    error = new errorResponse(msg, 400);
+  if (err.name === "ValidationError") {
+    const message = Object.values(err.errors).map((val) => val.message);
+    error = new errorResponse(message, 400);
   }
+
   //Multer File Error
   if (err.code === "LIMIT_FILE_SIZE") {
     const msg = `File shoud be less then 5MB`;
@@ -32,6 +33,12 @@ const errorHandler = (err, req, res, next) => {
     const msg = `File items should be less then euqal to 5`;
     error = new errorResponse(msg, 400);
   }
+
+  if (err.code === "ENOENT") {
+    const msg = error.message;
+    error = new errorResponse(msg, 400);
+  }
+
   res
     .status(error.statusCode)
     .json({ success: false, error: error.message || "Server Error" });

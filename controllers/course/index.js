@@ -7,6 +7,7 @@ const {
 } = require("./controller");
 const router = express.Router();
 const multer = require("multer");
+const errorHandler = require("../../middleware/error");
 
 //photo upload
 const upload = multer({
@@ -15,6 +16,11 @@ const upload = multer({
       cb(null, "controllers/course/photo");
     },
     filename: function (req, file, cb) {
+      //   const match = ["image/png", "image/jpeg"];
+      //   if (match.indexOf(file.mimetype) === -1) {
+      //     //var message = `${} is invalid. Only accept png/jpeg.`;
+      //     cb(null, file.originalname);
+      //   }
       const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
       cb(null, file.fieldname + "-" + uniqueSuffix);
     },
