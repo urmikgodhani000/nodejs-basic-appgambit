@@ -8,7 +8,7 @@ const {
 } = require("./controllers");
 const router = express.Router();
 
-router.route("/").post(craeteBootcamps);
+router.post("/", craeteBootcamps);
 router
   .route("/:id")
   .delete(deleteBootcamps)

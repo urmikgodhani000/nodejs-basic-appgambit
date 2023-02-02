@@ -8,6 +8,7 @@ const {
 const router = express.Router();
 const multer = require("multer");
 const errorHandler = require("../../middleware/error");
+const { protect, authorize } = require("../../middleware/auth");
 
 //photo upload
 const upload = multer({
@@ -30,6 +31,12 @@ const upload = multer({
 
 router.route("/").get(getCourses).post(createCourse);
 router.get("/:id", getCourse);
-router.post("/photo", upload, uploadPhoto);
+router.post(
+  "/photo",
+  protect,
+  authorize("publisher", "admin"),
+  upload,
+  uploadPhoto
+);
 
 module.exports = router;

@@ -42,3 +42,13 @@ exports.login = async (req, res, next) => {
   const token = user.getSignedJwtToken();
   res.status(200).json({ sucess: true, data: removeFileUser, token: token });
 };
+
+exports.getUser = async (req, res, next) => {
+  console.log(req.user);
+  try {
+    const user = await User.findOne({ _id: req.user });
+    res.status(200).json({ sucess: true, data: user });
+  } catch (error) {
+    next(error);
+  }
+};
