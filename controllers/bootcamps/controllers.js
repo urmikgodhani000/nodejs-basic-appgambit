@@ -1,8 +1,24 @@
 const Bootcamp = require("../../models/Bootcamps");
 const errorHandler = require("../../middleware/error");
+const errorResponse = require("../../utils/errorResponse");
 
 exports.craeteBootcamps = async (req, res, next) => {
   try {
+    //add user to req.body
+    req.body.user = req.user.id;
+
+    //Check for published bootcamp
+    const publishedBootcamp = await Bootcamp.findOne({ user: req.user.id });
+
+    if (publishedBootcamp && req.user.role !== "admin") {
+      return next(
+        new errorResponse(
+          `The user with ID ${req.user.id} has already published a bootcamp`,
+          400
+        )
+      );
+    }
+
     const bootcamps = await Bootcamp.create(req.body);
     res.status(201).json({ success: true, data: bootcamps });
   } catch (error) {
@@ -42,9 +58,28 @@ exports.deleteBootcamps = async (req, res) => {
   }
 };
 
-exports.updateBootcamps = async (req, res) => {
+exports.updateBootcamps = async (req, res, next) => {
   try {
-    const bootcamps = await Bootcamp.findByIdAndUpdate(
+    const bootcamps = await Bootcamp.findById(req.params.id);
+
+    if (!bootcamps) {
+      return res.status(400).json({ success: false });
+    }
+
+    //Make sure user is bootcamp owner
+    if (
+      bootcamps.user.toString() !== req.user.id &&
+      req.user.role !== "admin"
+    ) {
+      return next(
+        new errorResponse(
+          `User ${req.params.id} is not authorized to update this bootcomp`,
+          404
+        )
+      );
+    }
+
+    const bootcampUpdate = await Bootcamp.findByIdAndUpdate(
       req.params.id,
       req.body,
       {
@@ -53,11 +88,7 @@ exports.updateBootcamps = async (req, res) => {
       }
     );
 
-    if (!bootcamps) {
-      return res.status(400).json({ success: false });
-    }
-
-    res.status(200).json({ success: true, data: bootcamps });
+    res.status(200).json({ success: true, data: bootcampUpdate });
   } catch (error) {
     next(error);
   }

@@ -1,4 +1,5 @@
 const express = require("express");
+const { protect } = require("../../middleware/auth");
 const {
   craeteBootcamps,
   getBootcamps,
@@ -8,12 +9,12 @@ const {
 } = require("./controllers");
 const router = express.Router();
 
-router.post("/", craeteBootcamps);
+router.route("/").post(protect, craeteBootcamps);
 router
   .route("/:id")
   .delete(deleteBootcamps)
   .get(getBootcamps)
-  .patch(updateBootcamps);
+  .patch(protect, updateBootcamps);
 router.post("/get/getPage", pagination);
 
 module.exports = router;

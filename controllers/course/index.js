@@ -4,6 +4,7 @@ const {
   getCourse,
   getCourses,
   uploadPhoto,
+  deleteCourse,
 } = require("./controller");
 const router = express.Router();
 const multer = require("multer");
@@ -29,7 +30,7 @@ const upload = multer({
   limits: { fileSize: 1024 * 1024 * 2 },
 }).array("file_upload", 5);
 
-router.route("/").get(getCourses).post(createCourse);
+router.route("/").get(getCourses).post(protect, createCourse);
 router.get("/:id", getCourse);
 router.post(
   "/photo",
@@ -38,5 +39,6 @@ router.post(
   upload,
   uploadPhoto
 );
+router.route("/:id").delete(protect, deleteCourse);
 
 module.exports = router;
